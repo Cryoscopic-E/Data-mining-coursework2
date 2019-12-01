@@ -23,7 +23,7 @@ def slice_img(dataframe):
         sub_matrix = re[9:37, 9:37]
         data.append(sub_matrix.flatten())
         bar.next()
-    reduced = pd.DataFrame(data, columns=range(0, 28**2))
+    reduced = pd.DataFrame(data, columns=range(0, 28 ** 2))
     bar.finish()
     return reduced
 
@@ -61,6 +61,7 @@ def save_dataframe_csv(dataframe, file_path):
                 bar.next()
             bar.finish()
 
+
 def randomize_data(dataframe, seed):
     """
     Returns a randomized version of the input data based on the seed
@@ -74,10 +75,10 @@ def randomize_data(dataframe, seed):
 
 if __name__ == '__main__':
     # load data
-    X_train = load_dataframe('data/train/X_train_gr_smpl.csv')
-    y_train = load_dataframe('data/train/y_train_smpl.csv')
-    X_test = load_dataframe('data/test/X_test_gr_smpl.csv')
-    y_test = load_dataframe('data/test/y_test_smpl.csv')
+    X_train = load_dataframe('../data/train/X_train_gr_smpl.csv')
+    y_train = load_dataframe('../data/train/y_train_smpl.csv')
+    X_test = load_dataframe('../data/test/X_test_gr_smpl.csv')
+    y_test = load_dataframe('../data/test/y_test_smpl.csv')
     # My 3, Mase Pos and Me
     random_seed = 3
     # randomize
@@ -92,26 +93,25 @@ if __name__ == '__main__':
     X_train_slc_nrml = normalize(X_train_slc)
     X_test_slc_nrml = normalize(X_test_slc)
     # save your work!
-    save_dataframe_csv(X_train_slc_nrml, 'data/train/X_train_sliced_n_diced.csv')
-    save_dataframe_csv(y_train, 'data/train/y_train_rnd.csv')
-    save_dataframe_csv(X_test_slc_nrml, 'data/test/X_test_sliced_n_diced.csv')
-    save_dataframe_csv(y_test, 'data/test/y_test_rnd.csv')
+    save_dataframe_csv(X_train_slc_nrml, '../data/train/X_train_sliced_n_diced.csv')
+    save_dataframe_csv(y_train, '../data/train/y_train_rnd.csv')
+    save_dataframe_csv(X_test_slc_nrml, '../data/test/X_test_sliced_n_diced.csv')
+    save_dataframe_csv(y_test, '../data/test/y_test_rnd.csv')
     # take 4000 instances of the training set and give them to the test set
     X_train_slc_nrml_less_4000 = X_train_slc_nrml[:-4000]
     y_train_less_4000 = y_train[:-4000]
     X_test_slc_nrml_up_4000 = pd.concat([X_test_slc_nrml, X_train_slc_nrml[-4000:]])
     y_test_up_4000 = pd.concat([y_test, y_train[-4000:]])
-    save_dataframe_csv(X_train_slc_nrml_less_4000, 'data/train/X_train_sliced_n_diced_less_4000.csv')
-    save_dataframe_csv(y_train_less_4000, 'data/train/y_train_rnd_less_4000.csv')
-    save_dataframe_csv(X_test_slc_nrml_up_4000, 'data/test/X_test_sliced_n_diced_up_4000.csv')
-    save_dataframe_csv(y_test_up_4000, 'data/test/y_test_rnd_up_4000.csv')
+    save_dataframe_csv(X_train_slc_nrml_less_4000, '../data/train/X_train_sliced_n_diced_less_4000.csv')
+    save_dataframe_csv(y_train_less_4000, '../data/train/y_train_rnd_less_4000.csv')
+    save_dataframe_csv(X_test_slc_nrml_up_4000, '../data/test/X_test_sliced_n_diced_up_4000.csv')
+    save_dataframe_csv(y_test_up_4000, '../data/test/y_test_rnd_up_4000.csv')
     # at this rate there will be no training set left!
     X_train_slc_nrml_less_9000 = X_train_slc_nrml[:-9000]
     y_train_less_9000 = y_train[:-9000]
     X_test_slc_nrml_up_9000 = pd.concat([X_test_slc_nrml, X_train_slc_nrml[-9000:]])
     y_test_up_9000 = pd.concat([y_test, y_train[-9000:]])
-    save_dataframe_csv(X_train_slc_nrml_less_9000, 'data/train/X_train_sliced_n_diced_less_9000.csv')
-    save_dataframe_csv(y_train_less_9000, 'data/train/y_train_rnd_less_9000.csv')
-    save_dataframe_csv(X_test_slc_nrml_up_9000, 'data/test/X_test_sliced_n_diced_up_9000.csv')
-    save_dataframe_csv(y_test_up_9000, 'data/test/y_test_rnd_up_9000.csv')
-
+    save_dataframe_csv(X_train_slc_nrml_less_9000, '../data/train/X_train_sliced_n_diced_less_9000.csv')
+    save_dataframe_csv(y_train_less_9000, '../data/train/y_train_rnd_less_9000.csv')
+    save_dataframe_csv(X_test_slc_nrml_up_9000, '../data/test/X_test_sliced_n_diced_up_9000.csv')
+    save_dataframe_csv(y_test_up_9000, '../data/test/y_test_rnd_up_9000.csv')
