@@ -5,43 +5,32 @@ import pandas as pd
 import data_ops
 from progress.bar import Bar
 
-# Use opnenc cv to read images, resize them and apply grey filter
-# After that, we want to save those pixels as csv files.
 
+# Use opnencv to load image and apply grey scale filter. After that, we convert it to a .csv file
 
-def load_image(path):
-    print("Loading images...")
-    img = cv2.imread(path)
-    print("Converting to gray...")
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    print("Done")
+def load_image(path, path_grey):
+    img = cv2.imread(path)  # Load image
+    gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY) # Convert to gray
+    cv2.imwrite(path_grey, gray) # Save image in grey scale
     return gray
     
-def convert_image(image, path):
-    data = np.asarray(image, dtype=np.int).flatten()
-    print("Passing image pixels to csv...")
-    with open(path, 'w') as f:
+def convert_image(* args):
+    _set=list()
+    for image in args:
+        data = np.asarray(image, dtype=np.int).flatten()
+        _set.append(data)
+    with open('data/new_test/tests.csv', 'w') as f:
         writer = csv.writer(f)
-        writer.writerow(data)
+        writer.writerow(range(48*48))
+        writer.writerows(_set)
         print("File created")
     return data
-
-def slice_imgae(image):
-    bar = Bar('Slicing', max=len(dataframe.values))
-    data = []
-    re = np.reshape(image, (48, 48))
-    sub_matrix = re[9:37, 9:37]
-    data.append(sub_matrix.flatten())
-    bar.next()
-    reduced = pd.DataFrame(data, columns=range(0, 28**2))
-    bar.finish()
-    return reduced
 
 # Operations from data_operations for reducing, slicing and randomizing the images
 
 def normalize(dataframe):
     """
-    Create the normalized version of the train_smpl
+    Create the normalized version of the test sample
     The image's pixels are converted in a range [0-255]
     """
     normalized = []
@@ -58,71 +47,62 @@ def normalize(dataframe):
     return pd.DataFrame(normalized, columns=dataframe.columns)
 
 
+def slice_img(dataframe):
+    """
+    Return the dataframe with all the images reduced to 28x28 to eliminate the background
+    """
+    bar = Bar('Slicing', max=len(dataframe.values))
+    data = []
+    for image in dataframe.values:
+        re = np.reshape(image, (48, 48))
+        sub_matrix = re[9:37, 9:37]
+        data.append(sub_matrix.flatten())
+        bar.next()
+    reduced = pd.DataFrame(data, columns=range(0, 28 ** 2))
+    bar.finish()
+    return reduced
+
+def save_dataframe_csv(dataframe, file_path):
+    """
+    Helper method to save a dataframe in the correct format
+    """
+    if file_path != "":
+        with open(file_path, 'w', newline='') as csv_file:
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow(dataframe.columns)
+            bar = Bar('Saving csv\t', max=len(dataframe.values))
+            for el in dataframe.values:
+                csv_writer.writerow(el)
+                bar.next()
+            bar.finish()
+
+
 if __name__ == '__main__':
     #load data
-    new_test_1 = load_image("../scripts/data/new_test/test1_px.png")
-    new_test_2 = load_image("../scripts/data/new_test/test2_px.png")
-    new_test_2 = load_image("../scripts/data/new_test/test3_px.png")
+    new_test_1 = load_image('data/new_test/test_1.png', 'data/new_test/test1_grey.png')
+    new_test_2 = load_image('data/new_test/test_2.png', 'data/new_test/test2_grey.png')
+    new_test_3 = load_image('data/new_test/test_3.png', 'data/new_test/test3_grey.png')
     
-    #save my work
-    test1_csv = convert_image(new_test_1, "../scripts/data/new_test/test1_px.csv")
-    test2_csv = convert_image(new_test_1, "../scripts/data/new_test/test2_px.csv")
-    test3_csv = convert_image(new_test_1, "../scripts/data/new_test/test3_px.csv")
+    #save my work and combine
+    tests_csv = convert_image(new_test_1, new_test_2, new_test_3)
 
+
+    # combine image
+
+    
     #Load dataframe
-    x_test1 = data_ops.load_dataframe("../scripts/data/new_test/test1_px.csv")
-    x_test2 = data_ops.load_dataframe("../scripts/data/new_test/test2_px.csv")
-    x_test3 = data_ops.load_dataframe("../scripts/data/new_test/test3_px.csv")
-    
-    #Randomise pixels
-    random_seed = 3
-    x_test1 = data_ops.randomize_data(x_test1, random_seed)
-    x_test2 = data_ops.randomize_data(x_test2, random_seed)
-    x_test3 = data_ops.randomize_data(x_test3, random_seed)
-    
+    x_test = pd.read_csv('data/new_test/tests.csv')
+
     #Reduce size of image by slicing it
-    x_test1_slc = data_ops.slice_img(x_test1)
-    x_test2_slc = data_ops.slice_img(x_test2)
-    x_test3_slc = data_ops.slice_img(x_test3)
+    x_test_slc = slice_img(x_test)
     
-    #Normalize image
-    x_test1_slc_nrml = normalize(x_test1_slc)
-    x_test2_slc_nrml = normalize(x_test1_slc)
-    x_test3_slc_nrml = normalize(x_test1_slc)
+    
+
+    # Normalize pixels
+    x_test_normalized = normalize(x_test_slc)
+
     
     #Save the images in new csv files
-    data_ops.save_dataframe_csv(x_test1_slc_nrml, "../scripts/data/new_test/x_test1_sliced_n_diced.csv")
-    data_ops.save_dataframe_csv(x_test1, "../scripts/data/new_test/x_test1_rnd.csv")
-
-    data_ops.save_dataframe_csv(x_test2_slc_nrml, "../scripts/data/new_test/x_test2_sliced_n_diced.csv")
-    data_ops.save_dataframe_csv(x_test2, "../scripts/data/new_test/x_test2_rnd.csv")
-
-    data_ops.save_dataframe_csv(x_test3_slc_nrml, "../scripts/data/new_test/x_test3_sliced_n_diced.csv")
-    data_ops.save_dataframe_csv(x_test3, "../scripts/data/new_test/x_test3_rnd.csv")
-
-# Operations 
-# Now onto the tree operations and NN.
-
-
-"""
-if__
-def convert_to_csv()
-data = []
-data.append(gray.flatten())
-print(data)
-
-# Save Greyscale values
-data = np.asarray(data, dtype=np.int)
-data = data.flatten()
-print(data)
-with open("../scripts/data/new_test/test1.csv", 'w') as f:
-    writer = csv.writer(f)
-    writer.writerow(data)
-
-
-#cv2.imshow('Original image',img)
-#cv2.imshow('Gray image', gray)
-#cv2.imwrite("../scripts/data/new_test/test1_gray.png", gray)
-#cv2.waitKey(0)
-
-"""
+    save_dataframe_csv(x_test, 'data/new_test/x_test_t.csv')
+    save_dataframe_csv(x_test_slc, 'data/new_test/x_test_sliced.csv')
+    save_dataframe_csv(x_test_normalized, 'data/new_test/x_test_normalized.csv')

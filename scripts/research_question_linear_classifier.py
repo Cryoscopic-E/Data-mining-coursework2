@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     # full data
     X_full = pd.read_csv('data/train/X_train_sliced_n_diced.csv').values / 255.0
-    X_full_test = pd.read_csv('data/new_test/x_newtest_normalized.csv', header = None).values 
+    X_full_test = pd.read_csv('data/new_test/x_newtest_normalized.csv', header = None).values # / 255.0
     y_full = pd.read_csv('data/train/y_train_rnd.csv').values.ravel()
     y_full_test = pd.read_csv('data/new_test/y_newtest_rnd.csv').values.ravel()
   

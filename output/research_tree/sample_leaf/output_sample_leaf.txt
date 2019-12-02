@@ -1,0 +1,90 @@
+min samples leaf : 0.1 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[0 0 0]
+ [0 1 0]
+ [1 1 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         0
+           5       0.50      1.00      0.67         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.33      0.22         3
+weighted avg       0.17      0.33      0.22         3
+ 
+ 
+min samples leaf : 0.2 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[0 0 0]
+ [0 1 0]
+ [1 1 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           4       0.00      0.00      0.00         0
+           5       0.50      1.00      0.67         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.33      0.22         3
+weighted avg       0.17      0.33      0.22         3
+ 
+ 
+min samples leaf : 0.30000000000000004 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[0 0 0]
+ [0 1 0]
+ [2 0 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           4       0.00      0.00      0.00         0
+           5       1.00      1.00      1.00         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.33      0.33      0.33         3
+weighted avg       0.33      0.33      0.33         3
+ 
+ 
+min samples leaf : 0.4 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [1 1 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.50      1.00      0.67         1
+           8       0.00      0.00      0.00         0
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.33      0.22         3
+weighted avg       0.17      0.33      0.22         3
+ 
+ 
+min samples leaf : 0.5 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [1 1 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.50      1.00      0.67         1
+           8       0.00      0.00      0.00         0
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.33      0.22         3
+weighted avg       0.17      0.33      0.22         3
+ 
+ 

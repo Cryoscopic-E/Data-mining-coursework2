@@ -1,0 +1,396 @@
+Max depth : 3 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           8       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 4 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           8       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 5 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 6 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 7 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 8 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 9 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 10 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 11 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 12 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 13 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 14 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 15 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 16 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 17 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 18 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 19 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 20 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 21 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 22 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 23 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Max depth : 24 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
