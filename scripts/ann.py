@@ -26,7 +26,7 @@ def k_fold_validation(x, y, _model, _epochs, k=10):
     for train_index, test_index in KFold(k).split(x):
         x_train, x_test = x[train_index], x[test_index]
         y_train, y_test = y[train_index], y[test_index]
-        history_train = _model.fit(x_train, y_train, epochs=5)
+        history_train = _model.fit(x_train, y_train, epochs=_epochs)
         test_loss, test_accuracy = _model.evaluate(x_test, y_test, verbose=2)
         outputs.append(Output(history_train.history['acc'], history_train.history['loss'], test_accuracy, test_loss))
     return outputs
