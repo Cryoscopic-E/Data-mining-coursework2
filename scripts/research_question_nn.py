@@ -23,8 +23,8 @@ train_labels = pd.read_csv('/Users/lusy/Desktop/Data-mining-coursework2/data/tra
 if sys.argv[1] == '-testset':  # Using test set
     print('USING TEST SETS')
     test = pd.read_csv(
-        '/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/x_test2_normalized.csv').values / 255.0
-    test_labels = pd.read_csv('/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/y_test2_rnd.csv').values.ravel()
+        '/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/x_newtest_normalized.csv', header = None).values 
+    test_labels = pd.read_csv('/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/y_newtest_rnd.csv').values.ravel()
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Dense(
         2304, input_shape=(784,), activation='relu'))
@@ -41,6 +41,16 @@ if sys.argv[1] == '-testset':  # Using test set
     
     print('Test loss:', test_loss)
     print('Test accuracy:', test_accuracy)
+
+    output = ' '
+    output += 'Min impurity decrease : {} \n'.format(min_impurity_decrease) \
+                  + 'accuracy score : {} \n'.format(acc_score) \
+                  + 'confusion matrix : \n {} \n'.format(confusion_matrix(y_test, y_pred)) \
+                  + 'classification report : \n {} \n \n'.format(classification_report(y_test, y_pred))
+        accuracy_results.append(acc_score)
+    with open(FOLDER_STRUCT + "/impurity/output_impurity.txt", "w") as text_file:
+        text_file.write(output)
+
 else:
     print('Invalid arguments.')
     print('Launch script with "-kfold" or "-testset"')
