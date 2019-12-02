@@ -1,61 +1,37 @@
+from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import KFold, train_test_split
+from sklearn.model_selection import KFold
 from sklearn.base import clone
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from sklearn import tree
-from sklearn.tree._tree import TREE_LEAF
 from matplotlib.legend_handler import HandlerLine2D
 import seaborn as sn
-import graphviz
 
 
-def prune_index(inner_tree, index, threshold):
+def kfolds_random_forest(X, y, n_splits, n_estimators, max_depth, min_samples_split, min_samples_leaf, min_impurity_decrease, out_file):
     """
-    prunes tree for given threshold value (type depends on criterion: either gini or entropy)
-    ref: https://stackoverflow.com/questions/49428469/pruning-decision-trees
-    :param inner_tree: tree to prune
-    :param index: starting index
-    :param threshold: value to prune for
-    :return: none, tree operated on has been mutated
-    """
-    if inner_tree.value[index].min() < threshold:
-        # turn node into a leaf by "unlinking" its children
-        inner_tree.children_left[index] = TREE_LEAF
-        inner_tree.children_right[index] = TREE_LEAF
-    # if there are children, visit them as well
-    if inner_tree.children_left[index] != TREE_LEAF:
-        prune_index(inner_tree, inner_tree.children_left[index], threshold)
-        prune_index(inner_tree, inner_tree.children_right[index], threshold)
-
-
-def kfolds_decision_tree(X, y, n_splits, criterion, max_depth, min_samples_split, min_samples_leaf, min_impurity_decrease, out_file):
-    """
-    performs kfolds cross validation on decision tree
-    :param X: to classify
-    :param y: labels
-    :param n_splits: numbe rof folds for cv
-    :param criterion: gini or entropy
-    :param max_depth: max depth of tree
-    :param min_samples_split: min number of samples needed at split
-    :param min_samples_leaf: min number of samples at leaf node
-    :param min_impurity_decrease: min impurity decrease
-    :param out_file: filepath
-    :return: mean score and best score
+    performs k fold cross validation on random forest
+    :param X:
+    :param y:
+    :param n_splits:
+    :param n_estimators:
+    :param max_depth:
+    :param min_samples_split:
+    :param min_samples_leaf:
+    :param min_impurity_decrease:
+    :param out_file:
+    :return:
     """
     kf = KFold(n_splits=n_splits)
-    dt = tree.DecisionTreeClassifier(criterion=criterion,
-                                     max_depth=max_depth,
-                                     min_samples_split=min_samples_split,
-                                     min_samples_leaf=min_samples_leaf,
-                                     min_impurity_decrease=min_impurity_decrease)
+    rnd_clf = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, min_samples_split=min_samples_split,
+                                     min_samples_leaf=min_samples_leaf,min_impurity_decrease=min_impurity_decrease)
     output = ""
     best_score = 0
     average_score = 0
     fold_num = 1
-    for train_index, test_index in kf.split(X, y):
-        clone_clf = clone(dt)
+    for train_index, test_index in kf.split(X, y.ravel()):
+        clone_clf = clone(rnd_clf)
         X_train_folds = X[train_index]
         y_train_folds = y[train_index]
         X_test_fold = X[test_index]
@@ -66,10 +42,9 @@ def kfolds_decision_tree(X, y, n_splits, criterion, max_depth, min_samples_split
         if acc_score >= best_score:
             best_score = acc_score
         average_score += acc_score
-        cm = confusion_matrix(y_test_fold, y_pred)
         output += 'fold number {} scoring \n'.format(fold_num) \
                   + 'accuracy score : {} \n'.format(acc_score) \
-                  + 'confusion matrix : \n {} \n'.format(cm) \
+                  + 'confusion matrix : \n {} \n'.format(confusion_matrix(y_test_fold, y_pred)) \
                   + 'classification report : \n {} \n \n'.format(classification_report(y_test_fold, y_pred))
         fold_num += 1
     average_score /= n_splits
@@ -79,99 +54,54 @@ def kfolds_decision_tree(X, y, n_splits, criterion, max_depth, min_samples_split
     return average_score, best_score
 
 
-def kfolds_decision_tree_pruning(X, y, n_splits, threshold, criterion, max_depth, min_samples_split, min_samples_leaf, min_impurity_decrease, out_file):
-
-    kf = KFold(n_splits=n_splits)
-    dt = tree.DecisionTreeClassifier(criterion=criterion,
-                                     max_depth=max_depth,
-                                     min_samples_split=min_samples_split,
-                                     min_samples_leaf=min_samples_leaf,
-                                     min_impurity_decrease=min_impurity_decrease)
-    output = ""
-    best_score = 0
-    average_score = 0
-    fold_num = 1
-    for train_index, test_index in kf.split(X, y):
-        clone_clf = clone(dt)
-        X_train_folds = X[train_index]
-        y_train_folds = y[train_index]
-        X_test_fold = X[test_index]
-        y_test_fold = y[test_index]
-        clone_clf.fit(X_train_folds, y_train_folds)
-        prune_index(clone_clf.tree_, 0, threshold)
-        y_pred_pruned = clone_clf.predict(X_test_fold)
-        acc_score_pruned = accuracy_score(y_test_fold, y_pred_pruned)
-        cm = confusion_matrix(y_test_fold, y_pred_pruned)
-        if acc_score_pruned >= best_score:
-            best_score = acc_score_pruned
-        average_score += acc_score_pruned
-        output += 'fold number {} scoring \n'.format(fold_num) \
-                  + 'accuracy score : {} \n'.format(acc_score_pruned) \
-                  + 'confusion matrix : \n {} \n'.format(confusion_matrix(y_test_fold, y_pred_pruned)) \
-                  + 'classification report : \n {} \n \n'.format(classification_report(y_test_fold, y_pred_pruned))
-        fold_num += 1
-    average_score /= n_splits
-    output += 'av. accuracy score : {} \n best accuracy score : {} \n \n'.format(average_score, best_score)
-    with open(out_file + ".txt", "w") as text_file:
-        text_file.write(output)
-    return average_score, best_score
-
-
-def pruning_tuning_cv(X, y, kfold):
+def estiamtor_tuning_cv(X, y, kfold):
     """
-    max. depth tuning for cross validation on decision trees
+    max. depth tuning for cross validation on random forest
     """
-    thresholds = np.arange(0, 50, 5)
-    pruned_accuracy_results = []
-    for threshold in thresholds:
-        average_score, best_score = kfolds_decision_tree_pruning(X, y, kfold, threshold, 'gini', 100, 2, 1, 1e-7,
-                                                         FOLDER_STRUCT + "/pruning/output_pruning_threshold_" + str(threshold))
-        pruned_accuracy_results.append(average_score)
-    return thresholds, pruned_accuracy_results
+    num_estimators = np.arange(1, 30, 1)
+    accuracy_results = []
+    for estimators in num_estimators:
+        average_score, best_score = kfolds_random_forest(X, y.ravel(), kfold, estimators, 100, 2, 1, 1e-7,
+                                                         FOLDER_STRUCT + "/estimators/num_estimators_" + str(estimators))
+        accuracy_results.append(average_score)
+    return num_estimators, accuracy_results
 
 
-def pruning_tuning(X_train, y_train, X_test, y_test):
+def estiamtor_tuning(X_train, y_train, X_test, y_test):
     """
-    pruning tuning for decision tree
+    max. depth tuning for random forest
     """
-    thresholds = np.arange(0, 50, 5)
-    pruned_accuracy_results = []
+    num_estimators = np.arange(1, 30, 1)
+    accuracy_results = []
     output = ''
-    clf = tree.DecisionTreeClassifier(criterion='gini',
-                                     max_depth=100,
-                                     min_samples_split=2,
-                                     min_samples_leaf=1,
-                                     min_impurity_decrease=1e-7)
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
-    acc_score = accuracy_score(y_test, y_pred)
-    for threshold in thresholds:
-        clone_clf = clone(clf)
-        clone_clf.fit(X_train, y_train)
-        prune_index(clone_clf.tree_, 0, threshold)
-        y_pred_pruned = clone_clf.predict(X_test)
-        acc_score_pruned = accuracy_score(y_test, y_pred_pruned)
-        cm = confusion_matrix(y_test, y_pred_pruned)
-        outfile = FOLDER_STRUCT + "/pruning/output_prunes_" + str(threshold)
+    for estimators in num_estimators:
+        rnd_clf = RandomForestClassifier(n_estimators=estimators, max_depth=100,
+                                         min_samples_split=2,
+                                         min_samples_leaf=1, min_impurity_decrease=1e-7)
+        rnd_clf.fit(X_train, y_train.ravel())
+        y_pred = rnd_clf.predict(X_test)
+        acc_score = accuracy_score(y_test.ravel(), y_pred)
+        cm = confusion_matrix(y_test, y_pred)
+        outfile = FOLDER_STRUCT + "/estimators/num_estimators_" + str(estimators)
         confusion_matrix_heat_map(cm, outfile)
-        output += 'Max depth : {}       (No pruning accuracy = {} \n'.format(threshold, acc_score) \
-                  + 'accuracy score : {} \n'.format(acc_score_pruned) \
+        output += 'Num Estimators : {} \n'.format(estimators) \
+                  + 'accuracy score : {} \n'.format(acc_score) \
                   + 'confusion matrix : \n {} \n'.format(cm) \
-                  + 'classification report : \n {} \n \n'.format(classification_report(y_test, y_pred_pruned))
-        pruned_accuracy_results.append(acc_score_pruned)
-    with open(FOLDER_STRUCT + "/pruning/output_prunes.txt", "w") as text_file:
+                  + 'classification report : \n {} \n \n'.format(classification_report(y_test, y_pred))
+        accuracy_results.append(acc_score)
+    with open(FOLDER_STRUCT + "/estimators/num_estimators.txt", "w") as text_file:
         text_file.write(output)
-    return thresholds, pruned_accuracy_results
+    return num_estimators, accuracy_results
 
 
 def depth_tuning_cv(X, y, kfold, min_depth, max_depth):
     """
-    max. depth tuning for cross validation on decision trees
+    max. depth tuning for cross validation on random forest
     """
     max_depths = np.arange(min_depth,max_depth,1)
     accuracy_results = []
     for max_depth in max_depths:
-        average_score, best_score = kfolds_decision_tree(X, y, kfold, 'gini', max_depth, 2, 1, 1e-7,
+        average_score, best_score = kfolds_random_forest(X, y.ravel(), kfold, 10, max_depth, 2, 1, 1e-7,
                                                          FOLDER_STRUCT + "/max_depth/output_max_depth_" + str(max_depth))
         accuracy_results.append(average_score)
     return max_depths, accuracy_results
@@ -179,20 +109,18 @@ def depth_tuning_cv(X, y, kfold, min_depth, max_depth):
 
 def depth_tuning(X_train, y_train, X_test, y_test, min_depth, max_depth):
     """
-    max. depth tuning for decision tree
+    max. depth tuning for random forest
     """
     max_depths = np.arange(min_depth, max_depth, 1)
     accuracy_results = []
     output = ''
     for max_depth in max_depths:
-        clf = tree.DecisionTreeClassifier(criterion='gini',
-                                         max_depth=max_depth,
+        rnd_clf = RandomForestClassifier(n_estimators=10, max_depth=max_depth,
                                          min_samples_split=2,
-                                         min_samples_leaf=1,
-                                         min_impurity_decrease=1e-7)
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
-        acc_score = accuracy_score(y_test, y_pred)
+                                         min_samples_leaf=1, min_impurity_decrease=1e-7)
+        rnd_clf.fit(X_train, y_train.ravel())
+        y_pred = rnd_clf.predict(X_test)
+        acc_score = accuracy_score(y_test.ravel(), y_pred)
         cm = confusion_matrix(y_test, y_pred)
         outfile = FOLDER_STRUCT + "/max_depth/output_max_depth_" + str(max_depth)
         confusion_matrix_heat_map(cm, outfile)
@@ -208,12 +136,12 @@ def depth_tuning(X_train, y_train, X_test, y_test, min_depth, max_depth):
 
 def samples_split_tuning_cv(X, y, kfold):
     """
-    sample split tuning for cross validation on decision trees
+    sample split tuning for cross validation on random forest
     """
     min_samples_splits = np.linspace(0.01, 1.0, 20, endpoint=True)
     accuracy_results = []
     for min_samples_split in min_samples_splits:
-        average_score, best_score = kfolds_decision_tree(X, y, kfold, 'gini', 100, min_samples_split, 1, 1e-7,
+        average_score, best_score = kfolds_random_forest(X, y.ravel(), kfold, 10, 100, min_samples_split, 1, 1e-7,
                                                          FOLDER_STRUCT + "/sample_split/output_sample_split_" + str(min_samples_split))
         accuracy_results.append(average_score)
     return min_samples_splits, accuracy_results
@@ -221,19 +149,17 @@ def samples_split_tuning_cv(X, y, kfold):
 
 def samples_split_tuning(X_train, y_train, X_test, y_test):
     """
-    min samples split tuning for decision trees
+    min samples split tuning for random forest
     """
     min_samples_splits = np.linspace(0.01, 1.0, 20, endpoint=True)
     accuracy_results = []
     output = ''
     for min_samples_split in min_samples_splits:
-        clf = tree.DecisionTreeClassifier(criterion='gini',
-                                      max_depth=100,
-                                      min_samples_split=min_samples_split,
-                                      min_samples_leaf=1,
-                                      min_impurity_decrease=1e-7)
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
+        rnd_clf = RandomForestClassifier(n_estimators=10, max_depth=100,
+                                         min_samples_split=min_samples_split,
+                                         min_samples_leaf=1, min_impurity_decrease=1e-7)
+        rnd_clf.fit(X_train, y_train.ravel())
+        y_pred = rnd_clf.predict(X_test)
         acc_score = accuracy_score(y_test, y_pred)
         cm = confusion_matrix(y_test, y_pred)
         outfile = FOLDER_STRUCT + "/sample_split/output_sample_split_" + str(min_samples_split)
@@ -250,12 +176,12 @@ def samples_split_tuning(X_train, y_train, X_test, y_test):
 
 def samples_leaf_tuning_cv(X, y, kfold):
     """
-    min samples leaf tuning for cross validation on decision trees
+    min samples leaf tuning for cross validation on random forest
     """
     min_samples_leafs = np.linspace(0.01, 0.1, 5, endpoint=True)
     accuracy_results = []
     for min_samples_leaf in min_samples_leafs:
-        average_score, best_score = kfolds_decision_tree(X, y, kfold, 'gini', 100, 2, min_samples_leaf, 1e-7,
+        average_score, best_score = kfolds_random_forest(X, y.ravel(), kfold, 10, 100, 2, min_samples_leaf, 1e-7,
                                                          FOLDER_STRUCT + "/sample_leaf/output_sample_leaf_" + str(min_samples_leaf))
         accuracy_results.append(average_score)
     return min_samples_leafs, accuracy_results
@@ -263,20 +189,18 @@ def samples_leaf_tuning_cv(X, y, kfold):
 
 def samples_leaf_tuning(X_train, y_train, X_test, y_test):
     """
-    min samples leaf tuning for  decision trees
+    min samples leaf tuning for random forest
     """
     min_samples_leafs = np.linspace(0.01, 0.1, 5, endpoint=True)
     accuracy_results = []
     output = ''
     for min_samples_leaf in min_samples_leafs:
-        clf = tree.DecisionTreeClassifier(criterion='gini',
-                                      max_depth=100,
-                                      min_samples_split=2,
-                                      min_samples_leaf=min_samples_leaf,
-                                      min_impurity_decrease=1e-7)
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
-        acc_score = accuracy_score(y_test, y_pred)
+        rnd_clf = RandomForestClassifier(n_estimators=10, max_depth=100,
+                                         min_samples_split=2,
+                                         min_samples_leaf=min_samples_leaf, min_impurity_decrease=1e-7)
+        rnd_clf.fit(X_train, y_train.ravel())
+        y_pred = rnd_clf.predict(X_test)
+        acc_score = accuracy_score(y_test.ravel(), y_pred)
         cm = confusion_matrix(y_test, y_pred)
         outfile = FOLDER_STRUCT + "/sample_leaf/output_sample_leaf_" + str(min_samples_leaf)
         confusion_matrix_heat_map(cm, outfile)
@@ -292,12 +216,12 @@ def samples_leaf_tuning(X_train, y_train, X_test, y_test):
 
 def min_impurity_tuning_cv(X, y, kfold):
     """
-    min simpurity tuning (effectively pruning) for cross validation on  decision trees
+    min simpurity tuning (effectively pruning) for cross validation on random forest
     """
-    min_impurity_decreases = np.linspace(0, 0.1, 10, endpoint=True)
+    min_impurity_decreases = np.linspace(0, 10, 11, endpoint=True)
     accuracy_results = []
     for min_impurity_decrease in min_impurity_decreases:
-        average_score, best_score = kfolds_decision_tree(X, y, kfold, 'gini', 100, 2, 1, min_impurity_decrease,
+        average_score, best_score = kfolds_random_forest(X, y.ravel(), kfold, 10, 100, 2, 1, min_impurity_decrease,
                                                          FOLDER_STRUCT + "/impurity/output_impurity_" + str(min_impurity_decrease))
         accuracy_results.append(average_score)
     return min_impurity_decreases, accuracy_results
@@ -305,20 +229,18 @@ def min_impurity_tuning_cv(X, y, kfold):
 
 def min_impurity_tuning(X_train, y_train, X_test, y_test):
     """
-    min simpurity tuning (effectively pruning) for  decision trees
+    min simpurity tuning (effectively pruning) for random forest
     """
-    min_impurity_decreases = np.linspace(0, 0.1, 10, endpoint=True)
+    min_impurity_decreases = np.linspace(0, 10, 11, endpoint=True)
     accuracy_results = []
     output = ''
     for min_impurity_decrease in min_impurity_decreases:
-        clf = tree.DecisionTreeClassifier(criterion='gini',
-                                      max_depth=100,
-                                      min_samples_split=2,
-                                      min_samples_leaf=1,
-                                      min_impurity_decrease=min_impurity_decrease)
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
-        acc_score = accuracy_score(y_test, y_pred)
+        rnd_clf = RandomForestClassifier(n_estimators=10, max_depth=100,
+                                         min_samples_split=2,
+                                         min_samples_leaf=1, min_impurity_decrease=min_impurity_decrease)
+        rnd_clf.fit(X_train, y_train.ravel())
+        y_pred = rnd_clf.predict(X_test)
+        acc_score = accuracy_score(y_test.ravel(), y_pred)
         cm = confusion_matrix(y_test, y_pred)
         outfile = FOLDER_STRUCT + "/impurity/output_impurity_" + str(min_impurity_decrease)
         confusion_matrix_heat_map(cm, outfile)
@@ -357,27 +279,25 @@ def two_line_plot(x, y1, y2, xlabel, out_file):
     fig.savefig(out_file + '.png')
     plt.close(fig)
 
-
 def confusion_matrix_heat_map(cm, outfile):
     fig = plt.figure(figsize=(10, 7))
     sn.heatmap(cm, annot=True, fmt='d', cmap='Blues')
     fig.savefig(outfile + '_cm.png')
     plt.close(fig)
 
-
 # All testing below:
 
 # 10 fold cross validation experiments for baseline
 
-FOLDER_STRUCT = 'dt/cross_validation'
+FOLDER_STRUCT = 'sherwood/cross_validation'
 
 X_train = pd.read_csv('data/train/X_train_sliced_n_diced.csv').values / 255.0
 y_train = pd.read_csv('data/train/y_train_rnd.csv').values
 X_test = pd.read_csv('data/test/X_test_sliced_n_diced.csv').values / 255.0
 y_test = pd.read_csv('data/test/y_test_rnd.csv').values
 
-thresholds, pruned_accuracy_results_cv = pruning_tuning_cv(X_train, y_train, 10)
-line_plot(thresholds, pruned_accuracy_results_cv, 'Pruning Threshold', FOLDER_STRUCT + '/pruning/plot')
+num_estimators, num_estimators_accuracy_results_cv = estiamtor_tuning_cv(X_train, y_train, 10)
+line_plot(num_estimators, num_estimators_accuracy_results_cv, 'Forest Size', FOLDER_STRUCT + '/estimators/plot')
 
 max_depths, max_depths_accuracy_results_cv = depth_tuning_cv(X_train, y_train, 10, 4, 25)
 line_plot(max_depths, max_depths_accuracy_results_cv, 'Max Depth', FOLDER_STRUCT + '/max_depth/plot')
@@ -392,11 +312,11 @@ min_impurity_decreases, min_impurity_decreases_accuracy_results_cv = min_impurit
 line_plot(min_impurity_decreases, min_impurity_decreases_accuracy_results_cv, 'Min Impurity Decrease', FOLDER_STRUCT + '/impurity/plot')
 
 # using training set and test as given
-FOLDER_STRUCT = 'dt/test_train_1'
+FOLDER_STRUCT = 'sherwood/test_train_1'
 
-thresholds, pruned_accuracy_results = pruning_tuning(X_train, y_train, X_test, y_test)
-two_line_plot(thresholds, pruned_accuracy_results_cv, pruned_accuracy_results, 'Pruning Threshold', FOLDER_STRUCT + '/pruning/plot')
-
+num_estimators, num_estimators_accuracy_results = estiamtor_tuning(X_train, y_train, X_test, y_test)
+two_line_plot(num_estimators, num_estimators_accuracy_results_cv, num_estimators_accuracy_results, 'Forest Size', FOLDER_STRUCT + '/estimators/plot')
+#
 max_depths, max_depths_accuracy_results = depth_tuning(X_train, y_train, X_test, y_test, 4, 25)
 two_line_plot(max_depths, max_depths_accuracy_results_cv, max_depths_accuracy_results, 'Max Depth', FOLDER_STRUCT + '/max_depth/plot')
 
@@ -404,22 +324,22 @@ min_samples_splits, min_samples_splits_accuracy_results = samples_split_tuning(X
 two_line_plot(min_samples_splits, min_samples_splits_accuracy_results_cv, min_samples_splits_accuracy_results, 'Min Samples Split', FOLDER_STRUCT + '/sample_split/plot')
 
 min_samples_leafs, min_samples_leafs_accuracy_results = samples_leaf_tuning(X_train, y_train, X_test, y_test)
-two_line_plot(min_samples_leafs, min_samples_leafs_accuracy_results_cv, min_samples_leafs_accuracy_results, 'Min Samples Leaf', FOLDER_STRUCT + '/sample_leaf/plot')
+two_line_plot(min_samples_leafs, min_samples_leafs_accuracy_results_cv, min_samples_leafs_accuracy_results, 'Main Samples Leaf', FOLDER_STRUCT + '/sample_leaf/plot')
 
 min_impurity_decreases, min_impurity_decreases_accuracy_results = min_impurity_tuning(X_train, y_train, X_test, y_test)
 two_line_plot(min_impurity_decreases, min_impurity_decreases_accuracy_results_cv, min_impurity_decreases_accuracy_results, 'Min Impurity Decrease', FOLDER_STRUCT + '/impurity/plot')
 
 # reduced training set and increased test set
-FOLDER_STRUCT = 'dt/test_train_2'
+FOLDER_STRUCT = 'sherwood/test_train_2'
 
 X_train = pd.read_csv('data/train/X_train_sliced_n_diced_less_4000.csv').values / 255.0
 y_train = pd.read_csv('data/train/y_train_rnd_less_4000.csv').values
 X_test = pd.read_csv('data/test/X_test_sliced_n_diced_up_4000.csv').values / 255.0
 y_test = pd.read_csv('data/test/y_test_rnd_up_4000.csv').values
 
-thresholds, pruned_accuracy_results_cv = pruning_tuning_cv(X_train, y_train, 10)
-thresholds, pruned_accuracy_results = pruning_tuning(X_train, y_train, X_test, y_test)
-two_line_plot(thresholds, pruned_accuracy_results_cv, pruned_accuracy_results, 'Pruning Threshold', FOLDER_STRUCT + '/pruning/plot')
+num_estimators, num_estimators_accuracy_results_cv = estiamtor_tuning_cv(X_train, y_train, 10)
+num_estimators, num_estimators_accuracy_results = estiamtor_tuning(X_train, y_train, X_test, y_test)
+two_line_plot(num_estimators, num_estimators_accuracy_results_cv, num_estimators_accuracy_results, 'Forest Size', FOLDER_STRUCT + '/estimators/plot')
 
 max_depths, max_depths_accuracy_results_cv = depth_tuning_cv(X_train, y_train, 10, 4, 25)
 max_depths, max_depths_accuracy_results = depth_tuning(X_train, y_train, X_test, y_test, 4, 25)
@@ -431,23 +351,23 @@ two_line_plot(min_samples_splits, min_samples_splits_accuracy_results_cv, min_sa
 
 min_samples_leafs, min_samples_leafs_accuracy_results_cv = samples_leaf_tuning_cv(X_train, y_train, 10)
 min_samples_leafs, min_samples_leafs_accuracy_results = samples_leaf_tuning(X_train, y_train, X_test, y_test)
-two_line_plot(min_samples_leafs, min_samples_leafs_accuracy_results_cv, min_samples_leafs_accuracy_results, 'Min Samples Leaf', FOLDER_STRUCT + '/sample_leaf/plot')
+two_line_plot(min_samples_leafs, min_samples_leafs_accuracy_results_cv, min_samples_leafs_accuracy_results, 'Main Samples Leaf', FOLDER_STRUCT + '/sample_leaf/plot')
 
 min_impurity_decreases, min_impurity_decreases_accuracy_results_cv = min_impurity_tuning_cv(X_train, y_train, 10)
 min_impurity_decreases, min_impurity_decreases_accuracy_results = min_impurity_tuning(X_train, y_train, X_test, y_test)
 two_line_plot(min_impurity_decreases, min_impurity_decreases_accuracy_results_cv, min_impurity_decreases_accuracy_results, 'Min Impurity Decrease', FOLDER_STRUCT + '/impurity/plot')
 
 # reduced training set and increased test set
-FOLDER_STRUCT = 'dt/test_train_3'
+FOLDER_STRUCT = 'sherwood/test_train_3'
 
 X_train = pd.read_csv('data/train/X_train_sliced_n_diced_less_9000.csv').values / 255.0
 y_train = pd.read_csv('data/train/y_train_rnd_less_9000.csv').values
 X_test = pd.read_csv('data/test/X_test_sliced_n_diced_up_9000.csv').values / 255.0
 y_test = pd.read_csv('data/test/y_test_rnd_up_9000.csv').values
 
-thresholds, pruned_accuracy_results_cv = pruning_tuning_cv(X_train, y_train, 10)
-thresholds, pruned_accuracy_results = pruning_tuning(X_train, y_train, X_test, y_test)
-two_line_plot(thresholds, pruned_accuracy_results_cv, pruned_accuracy_results, 'Pruning Threshold', FOLDER_STRUCT + '/pruning/plot')
+num_estimators, num_estimators_accuracy_results_cv = estiamtor_tuning_cv(X_train, y_train, 10)
+num_estimators, num_estimators_accuracy_results = estiamtor_tuning(X_train, y_train, X_test, y_test)
+two_line_plot(num_estimators, num_estimators_accuracy_results_cv, num_estimators_accuracy_results, 'Forest Size', FOLDER_STRUCT + '/estimators/plot')
 
 max_depths, max_depths_accuracy_results_cv = depth_tuning_cv(X_train, y_train, 10, 4, 25)
 max_depths, max_depths_accuracy_results = depth_tuning(X_train, y_train, X_test, y_test, 4, 25)
@@ -459,13 +379,8 @@ two_line_plot(min_samples_splits, min_samples_splits_accuracy_results_cv, min_sa
 
 min_samples_leafs, min_samples_leafs_accuracy_results_cv = samples_leaf_tuning_cv(X_train, y_train, 10)
 min_samples_leafs, min_samples_leafs_accuracy_results = samples_leaf_tuning(X_train, y_train, X_test, y_test)
-two_line_plot(min_samples_leafs, min_samples_leafs_accuracy_results_cv, min_samples_leafs_accuracy_results, 'Min Samples Leaf', FOLDER_STRUCT + '/sample_leaf/plot')
+two_line_plot(min_samples_leafs, min_samples_leafs_accuracy_results_cv, min_samples_leafs_accuracy_results, 'Main Samples Leaf', FOLDER_STRUCT + '/sample_leaf/plot')
 
 min_impurity_decreases, min_impurity_decreases_accuracy_results_cv = min_impurity_tuning_cv(X_train, y_train, 10)
 min_impurity_decreases, min_impurity_decreases_accuracy_results = min_impurity_tuning(X_train, y_train, X_test, y_test)
 two_line_plot(min_impurity_decreases, min_impurity_decreases_accuracy_results_cv, min_impurity_decreases_accuracy_results, 'Min Impurity Decrease', FOLDER_STRUCT + '/impurity/plot')
-
-# # visualisation - not decided on best way to show this yet
-# dot_data = tree.export_graphviz(dt, out_file=None, filled=True, rounded=True, special_characters=True)
-# graph = graphviz.Source(dot_data)
-# graph.render(filename=graph)
