@@ -2,12 +2,12 @@ import sys
 import tensorflow as tf
 import pandas as pd
 from sklearn.model_selection import KFold
-
-
+import matplotlib.pyplot as plt
+import numpy as np
 def tf_model():
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Dense(
-        50, input_shape=(784,), activation='relu'))
+        784, input_shape=(784,), activation='relu'))
     model.add(tf.keras.layers.Dense(128, activation='sigmoid'))
     model.add(tf.keras.layers.Dense(10, activation='softmax'))
 
@@ -23,11 +23,11 @@ train_labels = pd.read_csv('/Users/lusy/Desktop/Data-mining-coursework2/data/tra
 if sys.argv[1] == '-testset':  # Using test set
     print('USING TEST SETS')
     test = pd.read_csv(
-        '/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/x_newtest_normalized.csv', header = None).values 
-    test_labels = pd.read_csv('/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/y_newtest_rnd.csv').values.ravel()
+        '/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/x_test_normalized.csv').values / 255.0
+    test_labels = pd.read_csv('/Users/lusy/Desktop/Data-mining-coursework2/data/new_test/y_test.csv').values.ravel()
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Dense(
-        2304, input_shape=(784,), activation='relu'))
+        784, input_shape=(784,), activation='relu'))
     model.add(tf.keras.layers.Dense(128, activation='sigmoid'))
     model.add(tf.keras.layers.Dense(10, activation='softmax'))
 
@@ -38,10 +38,22 @@ if sys.argv[1] == '-testset':  # Using test set
     print(test.shape)
     test_loss, test_accuracy = model.evaluate(test, test_labels, verbose=2)
     
-    
+    predictions = model.predict(test)
+    print(predictions)
+
+    for i in range(3):
+        plt.grid(False)
+        plt.xticks(range(10))
+        plt.yticks([])
+        plot = plt.bar(range(10), predictions[i], color='#777777')
+        plt.ylim([0,1])
+        pred_label = np.argmax(predictions[i])
+        plt.show()
+
     print('Test loss:', test_loss)
     print('Test accuracy:', test_accuracy)
 
+    """
     output = ' '
     output += 'Min impurity decrease : {} \n'.format(min_impurity_decrease) \
                   + 'accuracy score : {} \n'.format(acc_score) \
@@ -50,7 +62,7 @@ if sys.argv[1] == '-testset':  # Using test set
         accuracy_results.append(acc_score)
     with open(FOLDER_STRUCT + "/impurity/output_impurity.txt", "w") as text_file:
         text_file.write(output)
-
+    """
 else:
     print('Invalid arguments.')
     print('Launch script with "-kfold" or "-testset"')

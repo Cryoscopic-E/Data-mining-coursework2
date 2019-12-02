@@ -1,0 +1,178 @@
+Min impurity decrease : 0.0 
+accuracy score : 0.6666666666666666 
+confusion matrix : 
+ [[1 0 0]
+ [0 0 0]
+ [0 1 1]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       1.00      1.00      1.00         1
+           6       0.00      0.00      0.00         0
+           9       1.00      0.50      0.67         2
+
+    accuracy                           0.67         3
+   macro avg       0.67      0.50      0.56         3
+weighted avg       1.00      0.67      0.78         3
+ 
+ 
+Min impurity decrease : 1.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 2.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 3.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 4.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 5.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 6.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 7.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 8.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 9.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 
+Min impurity decrease : 10.0 
+accuracy score : 0.3333333333333333 
+confusion matrix : 
+ [[1 0]
+ [2 0]] 
+classification report : 
+               precision    recall  f1-score   support
+
+           5       0.33      1.00      0.50         1
+           9       0.00      0.00      0.00         2
+
+    accuracy                           0.33         3
+   macro avg       0.17      0.50      0.25         3
+weighted avg       0.11      0.33      0.17         3
+ 
+ 

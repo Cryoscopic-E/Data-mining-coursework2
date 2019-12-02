@@ -143,11 +143,9 @@ def line_plot(x, y, xlabel, out_file):
 
 X_train = pd.read_csv('data/train/X_train_sliced_n_diced.csv').values / 255.0
 y_train = pd.read_csv('data/train/y_train_rnd.csv').values
-X_test = pd.read_csv('data/new_test/x_newtest_normalized.csv', header = None).values
+X_test = pd.read_csv('data/new_test/x_test_normalized.csv').values / 255.0
 print(X_test.shape)
-X1_test = pd.read_csv('data/test/X_test_sliced_n_diced.csv').values / 255.0
-y_test = pd.read_csv('data/new_test/y_newtest_rnd.csv').values
-print(X1_test.shape)
+y_test = pd.read_csv('data/new_test/y_test.csv').values
 print(y_test.shape)
 
 FOLDER_STRUCT = 'output/research_tree'
